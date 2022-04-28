@@ -29,6 +29,9 @@ contract SmallLoan is ERC721 {
     mapping(uint => Loan) pendingLoans;
     mapping(uint => Loan) activeLoans;
 
+    // Loan structure -- lmk if there's anything you think I'm missing.
+    // We won't mess around w interest rates since the timeline of these loans
+    // will probably be super short (just to flip a mint rq and dip)
     struct Loan {
         IERC721 nft;
         address borrower; // 20/32
@@ -48,6 +51,10 @@ contract SmallLoan is ERC721 {
         _;
     }
 
+    // constructor (uint _feePercent) ERC721("Defaulted", "DEFAULT") {
+    //     owner = msg.sender;
+    //     feePercent = _feePercent;
+    // }
     constructor (uint _feePercent) {
         owner = msg.sender;
         feePercent = _feePercent;
@@ -85,4 +92,187 @@ contract SmallLoan is ERC721 {
             liqLoan.nftId
         );
     }
+
+
+    /**************************  BORROWER FUNCTIONS  **************************/
+
+    /**
+     * Small Loan Borrower Contract will allow users to propose a loan,
+     * retract a proposed loan that hasn't yet been accepted, and to
+     * pay off a loan in full.
+     **/
+
+     function propose(
+        IERC721 _nft,
+        uint256 _nftId,
+        uint256 _reqAmnt,
+        uint256 _toPay,
+        uint256 _duration
+    ) public {
+        require(_toPay > _reqAmnt, "Cannot request more than you pay!");
+
+        Loan memory newLoan = Loan({
+            borrower:        msg.sender,
+            lender:          address(0),
+            nft:             _nft,
+            nftId:           _nftId,
+            requestedAmount: _reqAmnt,
+            toPay:           _toPay,
+            timeStart:       0,
+            timeEnd:         _duration * (1 days),
+            id:              ++smallLoanId,
+            paidOff:         false,
+            loanActive:      false
+        });
+
+        pendingLoans[smallLoanId] = newLoan;
+
+        // Enable smallLoanPool to transfer the nft from borrower's account
+        require(
+            _nft.getApproved(_nftId) == address(this),
+            "Transfer not approved!"
+        );
+
+        // *** IN ORDER FOR THIS TO WORK, NEED A WEB3 CALL TO AWAIT APPROVAL ***
+        _nft.transferFrom(msg.sender, address(this), _nftId);
+
+        emit PostedLoan(msg.sender, smallLoanId);
+    }
+
+    // Borrower should be able to retract a proposed loan before it's accepted
+    function retract(uint _id) external {
+        require(activeLoans[_id].id != _id, "Loan is already active!");
+        require(
+            pendingLoans[_id].borrower == msg.sender,
+            "Can only retract your loans!"
+        );
+
+        pendingLoans[_id].nft.transferFrom(
+            address(this),
+            pendingLoans[_id].borrower,
+            pendingLoans[_id].nftId
+        );
+        pendingLoans[_id].borrower = address(0);
+
+        emit CeaseLoan(msg.sender, _id);
+    }
+
+    // Borrower should be able to pay off loan
+    function payInFull(uint256 _id) external payable validActiveLoan(_id) {
+        require(
+            activeLoans[_id].borrower == msg.sender,
+            "Can only pay off your own loans!"
+        );
+        require(msg.value >= activeLoans[_id].toPay, "Must pay loan in full!");
+
+        uint profit = activeLoans[_id].toPay - activeLoans[_id].requestedAmount;
+        uint poolFee = (profit * feePercent) / 100;
+
+        payable(activeLoans[_id].lender).transfer(
+            activeLoans[_id].toPay - poolFee
+        );
+
+        activeLoans[_id].toPay = 0;
+        activeLoans[_id].paidOff = true;
+        activeLoans[_id].nft.transferFrom(
+            address(this),
+            activeLoans[_id].borrower,
+            activeLoans[_id].nftId
+        );
+
+        emit LoanPaid(msg.sender, _id);
+    }
+
+
+
+    /***************************  LENDER FUNCTIONS  ***************************/
+
+    /**
+     * Small Loan Lender will allow users to accept a proposed loan
+     * and liquidate defaulted loans.
+     **/
+
+    // Lender should be able to lend to a borrower
+    function acceptLoan(uint _loanId) external payable {
+        require(
+            activeLoans[_loanId].id != _loanId,
+            "Loan has already been accepted!"
+        );
+
+        Loan memory accepting = pendingLoans[_loanId];
+
+        require(
+            accepting.borrower != address(0),
+            "Loan has been retracted!"
+        );
+
+        require(
+            msg.value >= accepting.requestedAmount,
+            "You need to loan out the full amount!"
+        );
+
+        payable(accepting.borrower).transfer(accepting.requestedAmount);
+        activeLoans[_loanId] = Loan({
+            borrower:        accepting.borrower,
+            lender:          msg.sender,
+            nft:             accepting.nft,
+            nftId:           accepting.nftId,
+            requestedAmount: accepting.requestedAmount,
+            toPay:           accepting.toPay,
+            timeStart:       accepting.timeStart + block.timestamp,
+            timeEnd:         accepting.timeEnd + block.timestamp,
+            id:              _loanId,
+            paidOff:         false,
+            loanActive:      true
+        });
+
+        emit AcceptedLoan(
+            accepting.borrower,
+            msg.sender,
+            accepting.requestedAmount,
+            _loanId
+        );
+    }
+
+    // Lender should be able to liquidate defaulted loans
+    function liquidate(uint _id) external validActiveLoan(_id) {
+        Loan memory loan = activeLoans[_id];
+        require(
+            block.timestamp > loan.timeEnd,
+            "Loan period still active!"
+        );
+
+        require(msg.sender == loan.lender, "Not lender");
+
+        require(
+            !loan.paidOff,
+            "Loan was paid off!"
+        );
+
+        activeLoans[_id].nft.transferFrom(
+            address(this),
+            loan.lender,
+            loan.nftId
+        );
+
+        // _safeMint(activeLoans[_id].borrower, ++defaultedLoanCount);
+
+        emit LoanDefaulted(
+            loan.borrower,
+            loan.lender,
+            loan.nftId
+        );
+    }
+
+    /****************************  NFT FUNCTIONS  ****************************/
+
+    // function transferFrom(
+    //     address _from,
+    //     address _to,
+    //     uint _tokenId
+    // ) public override {
+    //     require(msg.sender == owner, "NFT non-transferrable");
+
+    //     transfer(_from, _to, _tokenId);
+    // }
 }
