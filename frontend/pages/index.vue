@@ -1,3 +1,9 @@
 <template>
-  <h1>Index page</h1>
+  <div>
+    Current block: {{ currentBlockNumber }}
+  </div>
 </template>
+
+<script setup>
+const currentBlockNumber = useCurrentBlockNumber()
+</script>
