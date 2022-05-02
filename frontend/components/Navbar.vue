@@ -1,9 +1,10 @@
 <template>
-  <div class="navbar bg-base-100 border-2">
+  <div class="navbar bg-base-100 border-2 font-['Courier_New']">
     <div class="flex-1">
-      <a class="btn btn-ghost normal-case text-xl">NFT Loans</a>
+      <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">NFT Loans</NuxtLink>
     </div>
-    <div class="flex-none">
+    <div class="flex-none space-x-2">
+      <NuxtLink to="/loans" class="btn">Create Loans</NuxtLink>
       <button class="btn" @click="connectWallet()">
         {{ account === undefined ? "Connect Wallet" : account }}
       </button>
