@@ -6,7 +6,7 @@
     <div class="flex-none space-x-2">
       <NuxtLink to="/loans" class="btn">Create Loans</NuxtLink>
       <button class="btn" @click="connectWallet()">
-        {{ account === undefined ? "Connect Wallet" : account }}
+        {{ account === undefined ? "Connect Wallet" : "🔗 " + account.slice(-6) }}
       </button>
     </div>
   </div>

@@ -19,13 +19,13 @@
     </div>
     <div class="flex items-center">
       <span class="flex-1 inline-block">Minimum Duration</span>
-      <input type="text" placeholder="0" class="input flex-1" style = "position:relative; left:87px;">
-      <span class="flex-1 inline-block align-text-bottom">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;days</span>
+      <input type="text" placeholder="0" class="input flex-1 mx-4">
+      <span class="flex-1 inline-block align-text-bottom">days</span>
     </div>
     <div class="flex items-center">
       <span class="flex-1 inline-block">Maximum Interest Rate</span>
-      <input type="text" placeholder="0" class="input flex-1" style = "position:relative; left:87px;">
-      <span class="flex-1 inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%</span>
+      <input type="text" placeholder="0" class="input flex-1 mx-4">
+      <span class="flex-1 inline-block">%</span>
     </div>
   </div>
 </template>
