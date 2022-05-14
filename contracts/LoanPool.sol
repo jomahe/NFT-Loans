@@ -7,9 +7,9 @@ pragma solidity ^0.8.10;
  * to reflect these loans.
  **/
 
-import "./NFT.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract SmallLoan is ERC721 {
+contract SmallLoan {
 
     // Events for emitting when certain things happen
     event PostedLoan(address proposer, uint id);
