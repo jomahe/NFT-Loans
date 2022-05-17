@@ -7,9 +7,9 @@ pragma solidity ^0.8.10;
  * to reflect these loans.
  **/
 
-import "./NFT.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract SmallLoan is ERC721 {
+contract SmallLoan {
 
     // Events for emitting when certain things happen
     event PostedLoan(address proposer, uint id);
@@ -23,9 +23,7 @@ contract SmallLoan is ERC721 {
     address private immutable owner;
     uint96  public smallLoanId;
     uint256 public immutable feePercent;
-    // uint public defaultedLoanCount;
 
-    mapping(uint => Loan) idToSmallLoan;
     mapping(uint => Loan) pendingLoans;
     mapping(uint => Loan) activeLoans;
 
@@ -110,7 +108,11 @@ contract SmallLoan is ERC721 {
         uint256 _duration
     ) public {
         require(_toPay > _reqAmnt, "Cannot request more than you pay!");
-
+        require(
+            _nft.getApproved(_nftId) == address(this),
+            "Transfer not approved!"
+        );
+        _nft.transferFrom(msg.sender, address(this), _nftId);
         Loan memory newLoan = Loan({
             borrower:        msg.sender,
             lender:          address(0),
@@ -128,13 +130,10 @@ contract SmallLoan is ERC721 {
         pendingLoans[smallLoanId] = newLoan;
 
         // Enable smallLoanPool to transfer the nft from borrower's account
-        require(
-            _nft.getApproved(_nftId) == address(this),
-            "Transfer not approved!"
-        );
+
 
         // *** IN ORDER FOR THIS TO WORK, NEED A WEB3 CALL TO AWAIT APPROVAL ***
-        _nft.transferFrom(msg.sender, address(this), _nftId);
+
 
         emit PostedLoan(msg.sender, smallLoanId);
     }
@@ -238,7 +237,7 @@ contract SmallLoan is ERC721 {
     function liquidate(uint _id) external validActiveLoan(_id) {
         Loan memory loan = activeLoans[_id];
         require(
-            block.timestamp > loan.timeEnd,
+            block.timestamp > loan.timeEnd && loan.loanActive,
             "Loan period still active!"
         );
 
@@ -254,6 +253,8 @@ contract SmallLoan is ERC721 {
             loan.lender,
             loan.nftId
         );
+
+        activeLoans[_id].loanActive = false;
 
         // _safeMint(activeLoans[_id].borrower, ++defaultedLoanCount);
 
