@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col space-y-4 font-['Courier_New']">
-    <button class="btn">Select an NFT</button>
+    <button @click="selectNFT" class="btn">Select an NFT</button>
     <button class="btn">Authorize NFT</button>
     <button class="btn">Set Loan Terms</button>
     <div class="flex flex-row">
@@ -11,7 +11,8 @@
         <option>BTC</option>
         <option>USDT</option>
         <option>GMT</option>
-      </select>
+        <option>DUY</option>
+</select>
     </div>
     <div class="flex items-center">
       <span class="flex-1 inline-block">Minimum <br>Loan Amount</span>
@@ -31,4 +32,11 @@
 </template>
 
 <script setup>
+const osKey = useRuntimeConfig().osKey
+console.log(osKey)
+
+function selectNFT() {
+
+}
+
 </script>

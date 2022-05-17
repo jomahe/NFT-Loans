@@ -4,4 +4,7 @@ import { defineNuxtConfig } from 'nuxt'
 export default defineNuxtConfig({
     ssr: false,
     modules: ['@nuxtjs/tailwindcss'],
+    publicRuntimeConfig: {
+        osKey: '067226657bd4474293f5f57da67dfe63'
+    }
 })
