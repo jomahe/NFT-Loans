@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col space-y-4 font-['Courier_New']">
-    <input type="checkbox" id="my-modal" class="modal-toggle" />
-    <label for="my-modal" class="modal cursor-pointer">
-      <label class="modal-box relative" for="">
-        <h3 class="text-lg font-bold">Congratulations random Interner user!</h3>
-        <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
-      </label>
+  <input type="checkbox" id="my-modal" class="modal-toggle" v-model="toggle" />
+  <label for="my-modal" class="modal cursor-pointer">
+    <label class="modal-box relative" for="">
+      <h3 class="text-lg font-bold">Select your NFT to use as collateral</h3>
+      <p class="py-4">NFT1, NFT2, NFT3</p>
     </label>
+  </label>
 
-
-    <button @click="selectNFT" for="my-modal" class="btn modal-button">Select an NFT</button>
+  
+  <div class="flex flex-col space-y-4 font-['Courier_New']">
+    <button @click="selectNFT" class="btn modal-button">Select an NFT</button>
     <button class="btn">Authorize NFT</button>
     <button class="btn">Set Loan Terms</button>
     <div class="flex flex-row">
@@ -42,6 +42,7 @@
 
 <script setup>
 const osKey = useRuntimeConfig().osKey
+const toggle = ref(false)
 
 async function selectNFT() {
   const options = { method: 'GET' };
@@ -49,6 +50,7 @@ async function selectNFT() {
   const owner = account.value
   if (owner === undefined) {
     alert("wallet isn't connected!")
+    return
   }
 
   // get assets with opensea API
@@ -60,7 +62,7 @@ async function selectNFT() {
   console.log(assets)
 
   // display assets in a popup window
-
+  toggle.value = true
 }
 
 
