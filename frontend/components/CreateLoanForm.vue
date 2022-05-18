@@ -4,8 +4,8 @@
     <label for="my-modal" class="modal cursor-pointer">
       <label class="modal-box relative" for="">
         <h3 class="text-lg font-bold">Select your NFT to use as collateral</h3>
-        <div class="grid grid-cols-3 grid-rows-3 place-items-center gap-4">
-          <img v-for="nft in assets" :key="nft.id" :src="nft.image_url" alt="empty nft" class="rounded-xl" />
+        <div class="grid auto-rows-auto grid-cols-3 place-items-center gap-2 m-4">
+          <img v-for="nft in assets" :key="nft.id" :src="nft.image_thumbnail_url" alt="empty nft" class="rounded-xl" />
         </div>
       </label>
     </label>
@@ -64,7 +64,7 @@ async function selectNFT() {
     .catch(err => console.error(err))
 
   assets.value = response.assets
-
+  console.log(assets.value)
   // display assets in a popup window
   toggle.value = true
 }
