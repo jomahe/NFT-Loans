@@ -8,10 +8,15 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.0.3",
-    "nuxt": "3.0.0-rc.1"
+    "nuxt": "3.0.0-rc.3"
   },
   "dependencies": {
     "daisyui": "^2.14.2",
     "ethers": "^5.6.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "ufo": "^0.8.4"
+    }
   }
 }
