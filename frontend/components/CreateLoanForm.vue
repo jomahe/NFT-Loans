@@ -4,18 +4,15 @@
     <label for="my-modal" class="modal cursor-pointer">
       <label class="modal-box relative" for="">
         <h3 class="text-lg font-bold">Select your NFT to use as collateral</h3>
-        <div class="grid grid-cols-4 grid-rows-4 gap-10 mx-40 my-6">
-          <li v-for="nft in assets" :key="nft.id">
-            <img :src="nft.image_url" alt="empty nft" />
-            <p>{{ nft.name }}</p>
-          </li>
+        <div class="grid grid-cols-3 grid-rows-3 place-items-center gap-4">
+          <img v-for="nft in assets" :key="nft.id" :src="nft.image_url" alt="empty nft" class="rounded-xl" />
         </div>
       </label>
     </label>
 
     <div class="flex flex-col space-y-4">
       <button @click="selectNFT" class="btn modal-button">Select an NFT</button>
-      <button class="btn">Authorize NFT</button>
+      <button @click="approveNFT" class="btn">Authorize NFT</button>
       <button class="btn">Set Loan Terms</button>
       <div class="flex flex-row">
         <p class="flex-1">Loan <br> Denomination</p>
@@ -50,6 +47,7 @@
 const osKey = useRuntimeConfig().osKey
 const toggle = ref(false)
 const assets = ref()
+const selectedNFT = ref()
 
 async function selectNFT() {
   const options = { method: 'GET' };
@@ -71,6 +69,8 @@ async function selectNFT() {
   toggle.value = true
 }
 
+async function approveNFT() {
 
+}
 
 </script>
