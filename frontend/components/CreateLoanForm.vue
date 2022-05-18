@@ -1,6 +1,15 @@
 <template>
   <div class="flex flex-col space-y-4 font-['Courier_New']">
-    <button @click="selectNFT" class="btn">Select an NFT</button>
+    <input type="checkbox" id="my-modal" class="modal-toggle" />
+    <label for="my-modal" class="modal cursor-pointer">
+      <label class="modal-box relative" for="">
+        <h3 class="text-lg font-bold">Congratulations random Interner user!</h3>
+        <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+      </label>
+    </label>
+
+
+    <button @click="selectNFT" for="my-modal" class="btn modal-button">Select an NFT</button>
     <button class="btn">Authorize NFT</button>
     <button class="btn">Set Loan Terms</button>
     <div class="flex flex-row">
@@ -12,7 +21,7 @@
         <option>USDT</option>
         <option>GMT</option>
         <option>DUY</option>
-</select>
+      </select>
     </div>
     <div class="flex items-center">
       <span class="flex-1 inline-block">Minimum <br>Loan Amount</span>
@@ -33,10 +42,27 @@
 
 <script setup>
 const osKey = useRuntimeConfig().osKey
-console.log(osKey)
 
-function selectNFT() {
+async function selectNFT() {
+  const options = { method: 'GET' };
+  const account = useAccount()
+  const owner = account.value
+  if (owner === undefined) {
+    alert("wallet isn't connected!")
+  }
+
+  // get assets with opensea API
+  const response = await fetch(`https://testnets-api.opensea.io/api/v1/assets?owner=${account.value}&order_direction=desc&offset=0&limit=20`, options)
+    .then((response) => response.json())
+    .catch(err => console.error(err))
+
+  const assets = response.assets
+  console.log(assets)
+
+  // display assets in a popup window
 
 }
+
+
 
 </script>

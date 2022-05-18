@@ -13,5 +13,5 @@
 </template>
 
 <script setup>
-console.log("HI")
+
 </script>

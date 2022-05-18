@@ -5,6 +5,6 @@ export default defineNuxtConfig({
     ssr: false,
     modules: ['@nuxtjs/tailwindcss'],
     publicRuntimeConfig: {
-        osKey: '067226657bd4474293f5f57da67dfe63'
+        osKey: '4b914cb8dc4743d6a34cb6549285876c'
     }
 })
