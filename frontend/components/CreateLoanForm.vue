@@ -5,7 +5,10 @@
       <label class="modal-box relative" for="">
         <h3 class="text-lg font-bold">Select your NFT to use as collateral</h3>
         <div class="grid grid-cols-4 grid-rows-4 gap-10 mx-40 my-6">
-          <NFTDisplay v-for="nft in assets" :contractAddress="nft.contractAddress" :tokenId="nft.tokenId" />
+          <li v-for="nft in assets" :key="nft.id">
+            <img :src="nft.image_url" alt="empty nft" />
+            <p>{{ nft.name }}</p>
+          </li>
         </div>
       </label>
     </label>
