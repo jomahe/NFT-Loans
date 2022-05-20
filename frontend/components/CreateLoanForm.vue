@@ -1,4 +1,4 @@
-<template>  
+<template>
   <div class="flex flex-col font-['Courier_New']">
     <input type="checkbox" id="my-modal" class="modal-toggle" v-model="toggle" />
     <label for="my-modal" class="modal cursor-pointer">
@@ -13,9 +13,9 @@
     <div class="flex flex-col space-y-4">
       <button @click="selectNFT" class="btn modal-button">Select an NFT</button>
       <button @click="approveNFT" class="btn">Authorize NFT</button>
-      <button class="btn">Set Loan Terms</button>
+      <!-- <button class="btn">Set Loan Terms</button> -->
       <div class="flex flex-row">
-        <p class="flex-1">Loan <br> Denomination</p>
+        <!-- <p class="flex-1">Loan <br> Denomination</p>
         <select class="select flex-1">
           <option disabled selected>Select</option>
           <option>ETH</option>
@@ -23,23 +23,23 @@
           <option>USDT</option>
           <option>GMT</option>
           <option>DUY</option>
-        </select>
+        </select> -->
       </div>
       <div class="flex items-center">
-        <span class="flex-1 inline-block">Minimum <br>Loan Amount</span>
+        <span class="flex-1 inline-block">Requested <br> Amount (ETH)</span>
         <input type="text" placeholder="0" class="input flex-1">
       </div>
       <div class="flex items-center">
-        <span class="flex-1 inline-block">Minimum Duration</span>
+        <span class="flex-1 inline-block">Loan Duration (days) </span>
         <input type="text" placeholder="0" class="input flex-1 mx-4">
-        <span class="flex-1 inline-block align-text-bottom">days</span>
+        <!-- <span class="flex-1 inline-block align-text-bottom">days</span> -->
       </div>
       <div class="flex items-center">
-        <span class="flex-1 inline-block">Maximum Interest Rate</span>
+        <span class="flex-1 inline-block">Amount to Repay (ETH)</span>
         <input type="text" placeholder="0" class="input flex-1 mx-4">
-        <span class="flex-1 inline-block">%</span>
+        <!-- <span class="flex-1 inline-block">%</span> -->
       </div>
-      <button @click="$emit('proposeLoan')" class="btn">Submit</button>
+      <button @click="$emit('proposeLoan')" class="btn">Set Loan Terms and Create!</button>
     </div>
   </div>
 </template>
