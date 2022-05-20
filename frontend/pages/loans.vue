@@ -23,10 +23,9 @@ async function proposeLoan() {
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const account = (await ethereum.request({ method: 'eth_requestAccounts' }))[0]
   const signer = provider.getSigner()
-  const contract = useLoanPoolContract()
-  contract.connect(signer)
+  const contract = useLoanPoolContract().connect(signer)
   
-  console.log(contract)
+  console.log(Number(await contract.feePercent()))
 
 }
 </script>
