@@ -15,7 +15,7 @@
 <script setup>
 import { ethers } from "ethers"
 
-async function proposeLoan() {
+async function proposeLoan(params) {
   if (window.ethereum === undefined) {
     alert("Wallet isn't connected!")
     return
