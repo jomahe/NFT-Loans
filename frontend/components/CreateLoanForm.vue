@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <template>  
   <div class="flex flex-col font-['Courier_New']">
     <input type="checkbox" id="my-modal" class="modal-toggle" v-model="toggle" />
@@ -41,46 +40,11 @@
         <span class="flex-1 inline-block">%</span>
       </div>
       <button @click="$emit('proposeLoan')" class="btn">Submit</button>
-=======
-<template>
-  <div class="flex flex-col space-y-4 font-['Courier_New']">
-    <button class="btn">Select an NFT</button>
-    <button class="btn">Authorize NFT</button>
-
-    <!-- <div class="flex flex-row">
-      <p class="flex-1">Loan <br> Denomination</p>
-      <select class="select flex-1">
-        <option disabled selected>Select</option>
-        <option>ETH</option>
-        <option>BTC</option>
-        <option>USDT</option>
-        <option>GMT</option>
-      </select>
-    </div> -->
-    <div></div>
-    <div class="flex items-center">
-      <span class="flex-1 inline-block">Requested <br>Loan Amount (ETH)</span>
-      <input type="text" placeholder="0" class="input flex-1">
     </div>
-    <div class="flex items-center">
-      <span class="flex-1 inline-block"> Duration (Days)</span>
-      <input type="text" placeholder="0" class="input flex-1 mx-4">
-      <!-- <span class="flex-1 inline-block align-text-bottom">days</span> -->
-    </div>
-    <div class="flex items-center">
-      <span class="flex-1 inline-block">Amount to Repay (ETH)</span>
-      <input type="text" placeholder="0" class="input flex-1 mx-4">
-      <!-- <span class="flex-1 inline-block">%</span> -->
->>>>>>> Stashed changes
-    </div>
-    <div></div>
-    <button class="btn">Set Loan Terms and Create!</button>
   </div>
-
 </template>
 
 <script setup>
-<<<<<<< Updated upstream
 const emit = defineEmits(['proposeLoan'])
 const osKey = useRuntimeConfig().osKey
 const toggle = ref(false)
@@ -111,16 +75,4 @@ async function approveNFT() {
 
 }
 
-=======
-import { ethers } from "ethers"
-import loanPoolABI from "../../artifacts/contracts/LoanPool.sol/SmallLoan.json";
-const loanPoolAddr = 0x19c42ab6Bc7a0F5FA771d9f5B4aC7b5a831D8233;
-
-async function init() {
-  try {
-
-  }
-}
-const loanPoolContract = new ethers.Contract(loanPoolAddr, loanPoolABI, )
->>>>>>> Stashed changes
 </script>

@@ -4,9 +4,9 @@
       <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">NFT Loans</NuxtLink>
     </div>
     <div class="flex-none space-x-2">
-      <NuxtLink to="/loans" class="btn">Create a Loan</NuxtLink>
+      <NuxtLink to="/loans" class="btn">Create Loans</NuxtLink>
       <button class="btn" @click="connectWallet()">
-        {{ account === undefined ? "Connect Wallet" : "🔗 " + account.slice(2, 6) + "..." + account.slice(-4) }}
+        {{ account === undefined ? "Connect Wallet" : "🔗 " + account.slice(-6) }}
       </button>
     </div>
   </div>

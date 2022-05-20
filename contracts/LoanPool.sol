@@ -24,9 +24,8 @@ contract SmallLoan {
     uint96  public smallLoanId;
     uint256 public immutable feePercent;
 
-    mapping(uint => Loan) public pendingLoans;
-    mapping(uint => Loan) public activeLoans;
-    // mapping(address => uint96[]) public lenderToLoans;  NEED A WAY TO MAP A LENDER TO THEIR LOANS, CAN BE DONE ON WEB2 END?
+    mapping(uint => Loan) pendingLoans;
+    mapping(uint => Loan) activeLoans;
 
     // Loan structure -- lmk if there's anything you think I'm missing.
     // We won't mess around w interest rates since the timeline of these loans
@@ -212,9 +211,6 @@ contract SmallLoan {
         );
 
         payable(accepting.borrower).transfer(accepting.requestedAmount);
-
-        // lenderToLoans[msg.sender].push(_loanId);
-
         activeLoans[_loanId] = Loan({
             borrower:        accepting.borrower,
             lender:          msg.sender,
