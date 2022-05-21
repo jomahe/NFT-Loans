@@ -1,6 +1,10 @@
-# Nuxt 3 Minimal Starter
-
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+# TODO
+- [ ] propose loan
+- [ ] cancel loan
+- [ ] accept loan
+- [ ] pay off loan
+- [ ] liquidate loan
+- [ ] persist wallet after refresh
 
 ## Setup
 
