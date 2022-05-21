@@ -25,31 +25,36 @@
           <option>DUY</option>
         </select> -->
       </div>
+
       <div class="flex items-center">
         <span class="flex-1 inline-block">Requested <br> Amount (ETH)</span>
-        <input type="text" placeholder="0" class="input flex-1">
+        <input v-model="reqAmount" type="text" placeholder="0" class="input flex-1">
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Loan Duration (days) </span>
-        <input type="text" placeholder="0" class="input flex-1 mx-4">
+        <input v-model="duration" type="text" placeholder="0" class="input flex-1 mx-4">
         <!-- <span class="flex-1 inline-block align-text-bottom">days</span> -->
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Amount to Repay (ETH)</span>
-        <input type="text" placeholder="0" class="input flex-1 mx-4">
+        <input v-model="toPay" type="text" placeholder="0" class="input flex-1 mx-4">
         <!-- <span class="flex-1 inline-block">%</span> -->
       </div>
-      <button @click="$emit('proposeLoan')" class="btn">Set Loan Terms and Create!</button>
+      <button @click="$emit('proposeLoan(reqAmount, duration, toPay)')" class="btn">Set Loan Terms and Create!</button>
+      <!-- <button @click="proposeLoan(selectedNFT, tokenID, reqAmount, duration, toPay)" class="btn">Set Loan Terms and Create!</button> -->
     </div>
   </div>
 </template>
 
 <script setup>
-const emit = defineEmits(['proposeLoan'])
+const emit = defineEmits(['proposeLoan(reqAmount, duration, toPay)'])
 const osKey = useRuntimeConfig().osKey
 const toggle = ref(false)
 const assets = ref()
 const selectedNFT = ref()
+const reqAmount = ref()
+const duration = ref()
+const toPay = ref()
 
 async function selectNFT() {
   const options = { method: 'GET' };
@@ -66,6 +71,9 @@ async function selectNFT() {
     .catch(err => console.error(err))
 
   assets.value = response.assets
+  console.log(reqAmount)
+  console.log(duration)
+  console.log(toPay)
   console.log(assets.value)
   // display assets in a popup window
   toggle.value = true
