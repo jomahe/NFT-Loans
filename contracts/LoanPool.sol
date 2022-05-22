@@ -28,7 +28,6 @@ contract LoanPool {
 
     struct Loan {
         IERC721 nft;
-        uint96 nftId;
         address borrower;
         uint96 requestedAmount;
         address lender;
@@ -36,6 +35,7 @@ contract LoanPool {
         uint64 timeStart;
         uint64 timeEnd;
         uint96 id;
+        uint256 nftId;
         bool paidOff;
         bool loanActive;
     }
