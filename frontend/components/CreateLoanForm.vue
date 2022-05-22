@@ -40,14 +40,14 @@
         <input v-model="toPay" type="text" placeholder="0" class="input flex-1 mx-4">
         <!-- <span class="flex-1 inline-block">%</span> -->
       </div>
-      <button @click="$emit('proposeLoan(reqAmount, duration, toPay)')" class="btn">Set Loan Terms and Create!</button>
+      <button @click="$emit('proposeLoan')" class="btn">Set Loan Terms and Create!</button>
       <!-- <button @click="proposeLoan(selectedNFT, tokenID, reqAmount, duration, toPay)" class="btn">Set Loan Terms and Create!</button> -->
     </div>
   </div>
 </template>
 
 <script setup>
-const emit = defineEmits(['proposeLoan(reqAmount, duration, toPay)'])
+const emit = defineEmits(['proposeLoan'])
 const osKey = useRuntimeConfig().osKey
 const toggle = ref(false)
 const assets = ref()

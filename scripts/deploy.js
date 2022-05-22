@@ -8,12 +8,12 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   // We get the contract to deploy
-  const SmallLoanPool = await hre.ethers.getContractFactory("SmallLoan");
-  const smallLoanPool = await SmallLoanPool.deploy(10);
+  const LoanPool = await hre.ethers.getContractFactory("LoanPool");
+  const loanPool = await LoanPool.deploy(10);
 
-  await smallLoanPool.deployed();
+  await loanPool.deployed();
 
-  console.log("SmallLoanPool deployed to:", smallLoanPool.address);
+  console.log("LoanPool deployed to:", loanPool.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -212,8 +212,8 @@ contract LoanPool {
             nftId:           accepting.nftId,
             requestedAmount: accepting.requestedAmount,
             toPay:           accepting.toPay,
-            timeStart:       accepting.timeStart + block.timestamp,
-            timeEnd:         accepting.timeEnd + block.timestamp,
+            timeStart:       accepting.timeStart + uint64(block.timestamp),
+            timeEnd:         accepting.timeEnd + uint64(block.timestamp),
             id:              _loanId,
             paidOff:         false,
             loanActive:      true
