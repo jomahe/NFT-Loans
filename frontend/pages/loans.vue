@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-row space-x-10 p-10">
     <div class="flex-1">
-      display the selected NFT
+      <DisplayNft :nftUrl="nftUrl" :isImg="isImg" />
     </div>
     <div class="flex-1">
-      <CreateLoanForm/>
+      <CreateLoanForm @nft-selected=displayChange @form-filled=processForm />
     </div>
     <div class="flex-1">
       <LoanInstructions/>
@@ -13,5 +13,20 @@
 </template>
 
 <script setup>
+
+const nftUrl = ref("https://lh3.googleusercontent.com/Z4KCLyF6e4TiX0gTG9LPBU7HAhPcKhAEgm5pWMpxDVEXNSljKtmcjKa9Zw9lks--GJhz9fdlBDWGzGh-4u6V-it21ByVj26P7QW86Q")
+const isImg = ref(false)
+
+function displayChange(url) {
+  nftUrl.value = url
+  isImg.value = true
+}
+
+function processForm(denom, amt, duration, rate) {
+  alert(denom)
+  alert(amt)
+  alert(duration)
+  alert(rate)
+}
 
 </script>

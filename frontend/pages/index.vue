@@ -1,7 +1,7 @@
 <template>
   <div class="grid grid-cols-4 grid-rows-4 gap-10 mx-40 my-6">
     <!-- {{ contractAddress}} {{ tokenId}} -->
-    <LoanPreviewBox v-for="nft in nfts" :contractAddress="nft.contractAddress" :tokenId="nft.tokenId" />
+    <LoanPreviewBox v-for="nft in nfts" v-bind:key="nft.id" :contractAddress="nft.contractAddress" :tokenId="nft.tokenId" />
   </div>
 </template>
 

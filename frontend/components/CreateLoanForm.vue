@@ -5,7 +5,7 @@
       <label class="modal-box relative" for="">
         <h3 class="text-lg font-bold">Select your NFT to use as collateral</h3>
         <div class="grid grid-cols-3 grid-rows-3 place-items-center gap-4">
-          <img v-for="nft in assets" :key="nft.id" :src="nft.image_url" alt="empty nft" class="rounded-xl" />
+          <img v-for="nft in assets" @click="$emit('nftSelected', nft.image_url)" :key="nft.id" :src="nft.image_url" alt="'empty nft'" class="rounded-xl" />
         </div>
       </label>
     </label>
@@ -13,10 +13,10 @@
     <div class="flex flex-col space-y-4">
       <button @click="selectNFT" class="btn modal-button">Select an NFT</button>
       <button @click="approveNFT" class="btn">Authorize NFT</button>
-      <button class="btn">Set Loan Terms</button>
+      <button @click="sendForm" class="btn">Set Loan Terms</button>
       <div class="flex flex-row">
         <p class="flex-1">Loan <br> Denomination</p>
-        <select class="select flex-1">
+        <select v-model="loanDenom" class="select flex-1">
           <option disabled selected>Select</option>
           <option>ETH</option>
           <option>BTC</option>
@@ -27,16 +27,16 @@
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Minimum <br>Loan Amount</span>
-        <input type="text" placeholder="0" class="input flex-1">
+        <input v-model="loanAmt" type="text" placeholder="0" class="input flex-1">
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Minimum Duration</span>
-        <input type="text" placeholder="0" class="input flex-1 mx-4">
+        <input v-model="loanDur" type="text" placeholder="0" class="input flex-1 mx-4">
         <span class="flex-1 inline-block align-text-bottom">days</span>
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Maximum Interest Rate</span>
-        <input type="text" placeholder="0" class="input flex-1 mx-4">
+        <input v-model="loanRate" type="text" placeholder="0" class="input flex-1 mx-4">
         <span class="flex-1 inline-block">%</span>
       </div>
     </div>
@@ -44,10 +44,23 @@
 </template>
 
 <script setup>
+const emit = defineEmits(['formFilled'])
+
+const loanDenom = ref()
+const loanAmt = ref(0)
+const loanDur = ref(0)
+const loanRate = ref(0)
+
+function sendForm() {
+  emit('formFilled', loanDenom.value, loanAmt.value, loanDur.value, loanRate.value)
+}
+
+
 const osKey = useRuntimeConfig().osKey
 const toggle = ref(false)
 const assets = ref()
 const selectedNFT = ref()
+
 
 async function selectNFT() {
   const options = { method: 'GET' };
