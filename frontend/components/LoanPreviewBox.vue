@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+console.log("i'm loaded")
 const props = defineProps(["loanId"])
 const loanId = props.loanId
 const nftAddress = "0x000", nftId = 1
@@ -36,7 +37,13 @@ async function getLoanInfo(loanId) {
   const contract = useLoanPoolContract().connect(signer)
 
   // TODO: fetch loan info from contract and update components
+  activeLoans = await contract.accessActive()
+  pendingLoans = await contract.accessPending()
+  console.log(activeLoans)
+  console.log(pendingLoans)
 }
+
+getLoanInfo(loanId)
 
 // get asset info from OpenSea
 async function getOpenSeaAsset(nftId, nftAddress) {
