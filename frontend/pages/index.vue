@@ -1,6 +1,6 @@
 <template>
-  <div v-if="connected" class="grid grid-cols-4 grid-rows-4 gap-10 mx-40 my-6">
-    <LoanPreviewBox v-for="nft in nfts" v-bind:key="nft.id" :contractAddress="nft.contractAddress" :tokenId="nft.tokenId" />
+  <div v-if="connected" class="grid grid-cols-3 auto-rows-auto gap-10 mx-40 my-6">
+    <LoanPreviewBox v-for="loan in loans" :loan="loan" />
   </div>
   <div v-else>
     <p class="text-center m-6">Connect wallet to view active loans</p>
@@ -24,16 +24,25 @@ async function getLoans() {
   const contract = useLoanPoolContract().connect(signer)
 
   // TODO: fetch loan info from contract and update components
-  activeLoans = await contract.accessActive()
-  pendingLoans = await contract.accessPending()
-  console.log(activeLoans)
-  console.log(pendingLoans)
+  const cnt = await contract.loanId()
+  const activeLoans = []
+  const pendingLoans = []
+  for (let i = 1; i <= cnt; i++) {
+    const a = await contract.accessActive(i)
+    if (a.borrower !== "0x0000000000000000000000000000000000000000")
+      activeLoans.push(a)
+    const p = await contract.accessPending(i)
+    if (p.borrower !== "0x0000000000000000000000000000000000000000")
+      pendingLoans.push(p)
+  }
+  return activeLoans.concat(pendingLoans)
 }
 
-console.log(ethereum.selectedAddress)
 
+let loans = []
 if (ethereum.selectedAddress !== null) {
-  getLoans()
+  loans = await getLoans()
 
 }
+console.log(loans)
 </script>
