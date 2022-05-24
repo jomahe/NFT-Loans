@@ -16,17 +16,17 @@
 
       <div class="flex items-center">
         <span class="flex-1 inline-block">Requested <br> Amount (ETH)</span>
-        <input v-model="loanAmt" type="text" placeholder="0" class="input flex-1">
+        <input v-model="loanAmt" type="int" placeholder=0 class="input flex-1">
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Loan Duration (days)</span>
-        <input v-model="loanDur" type="text" placeholder="0" class="input flex-1 mx-4">
-        <span class="flex-1 inline-block align-text-bottom">days</span>
+        <input v-model="loanDur" type="int" placeholder=0 class="input flex-1 mx-4">
+        <!-- <span class="flex-1 inline-block align-text-bottom">days</span> -->
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Amount to Repay (ETH)</span>
-        <input v-model="loanRate" type="text" placeholder="0" class="input flex-1 mx-4">
-        <span class="flex-1 inline-block">%</span>
+        <input v-model="loanRate" type="int" placeholder=0 class="input flex-1 mx-4">
+        <!-- <span class="flex-1 inline-block">%</span> -->
       </div>
       <button @click="sendForm" class="btn">Create Loan!</button>
       <!-- <button @click="proposeLoan(selectedNFT, tokenID, reqAmount, duration, toPay)" class="btn">Set Loan Terms and Create!</button> -->
@@ -37,11 +37,12 @@
 <script setup>
 const emit = defineEmits(['formFilled'])
 
-const loanAmt = ref(0)
-const loanDur = ref(0)
-const loanRate = ref(0)
+const loanAmt = ref(null)
+const loanDur = ref(null)
+const loanRate = ref(null)
 
 function sendForm() {
+  // console.log(loanAmt.value, loanDur.value, loanRate.value)
   emit('formFilled', loanAmt.value, loanDur.value, loanRate.value)
 }
 

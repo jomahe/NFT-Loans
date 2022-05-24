@@ -14,33 +14,30 @@
 
 <script setup>
 import { ethers } from "ethers"
+import { loanPoolAddr, loanPoolABI } from "../../composables/states.js"
 
-async function proposeLoan(params) {
+async function proposeLoan(reqAmount, duration, toPay) {
   if (window.ethereum === undefined) {
     alert("Wallet isn't connected!")
     return
   }
+
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const account = (await ethereum.request({ method: 'eth_requestAccounts' }))[0]
   const signer = provider.getSigner()
-  const contract = useLoanPoolContract().connect(signer)
-
-  // nft = 0x19c42ab6Bc7a0F5FA771d9f5B4aC7b5a831D8233
-  // nftId = 2
+  const contract = new ethers.Contract(loanPoolAddr.toString(), loanPoolABI, signer)
 
   const tx = await contract.propose(
-    0x19c42ab6Bc7a0F5FA771d9f5B4aC7b5a831D8233,
-    2,
-    Number(reqAmount),
-    Number(toPay),
-    Number(duration)
+    "0x60e594700A50232b0af32572A7A4B648aB88Ff98",
+    3,
+    ethers.utils.parseUnits(reqAmount.toString(), 'ether'),
+    ethers.utils.parseUnits(toPay.toString(), 'ether'),
+    duration
   )
 
   await tx.wait()
 
   console.log(tx)
-
-  console.log(Number(await contract.feePercent()))
 }
 
 const nftUrl = ref("https://lh3.googleusercontent.com/Z4KCLyF6e4TiX0gTG9LPBU7HAhPcKhAEgm5pWMpxDVEXNSljKtmcjKa9Zw9lks--GJhz9fdlBDWGzGh-4u6V-it21ByVj26P7QW86Q")
@@ -51,10 +48,8 @@ function displayChange(url) {
   isImg.value = true
 }
 
-function processForm(amt, duration, rate) {
-  alert(amt)
-  alert(duration)
-  alert(rate)
+function processForm(amt, duration, toPay) {
+  proposeLoan(amt, duration, toPay)
 }
 
 
