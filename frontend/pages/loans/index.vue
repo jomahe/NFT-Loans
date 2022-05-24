@@ -4,7 +4,7 @@
       <DisplayNft class="mx-auto" :nftUrl="nftUrl" :isImg="isImg" />
     </div>
     <div class="flex-1">
-      <CreateLoanForm @nft-selected="displayChange" @form-filled="processForm" />
+      <CreateLoanForm @nft-selected=displayChange @form-filled=processForm />
     </div>
     <div class="flex-1">
       <LoanInstructions />

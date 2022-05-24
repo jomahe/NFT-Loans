@@ -8,38 +8,45 @@
       <h2 class="card-title">
         <p>{{ asset.name }}</p>
       </h2>
-      <h1 class="font-bold">Loan #{{id}}</h1>
-      <p>Start Date: {{ timeStart }}</p>
-      <p>End Date: {{ timeEnd }}</p>
-      <p>Loan Amount: {{ ethers.utils.formatUnits(requestedAmount) }} ETH</p>
-      <p>Amount to Pay: {{ ethers.utils.formatUnits(toPay) }} ETH</p>
-      <p>Borrower: {{ borrower.slice(-6) }}</p>
-      <p>Lender = {{ lender.slice(-6) }}</p>
-      <p>Loan Status: {{ loanActive ? "active" : "pending" }}</p>
+      <p>Start Date: {{timeStart}}</p>
+      <p>End Date: {{timeEnd}}</p>
+      <p>Loan Amount: {{requestedAmount}} ETH</p>
+      <p>Interest Rate: {{(toPay - requestedAmount) / (timeEnd - timeStart)}}</p>
+      <p>Borrower: {{borrower}}</p>
+      <p>Lender = {{lender}}</p>
+      <p>Loan Status: {{ active ? "active" : "inactive"}}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ethers} from "ethers"
+const props = defineProps(["loanId"])
+const loanId = props.loanId
+const nftAddress = "0x000", nftId = 1
+const borrower = "0x001", lender = "0x002", requestedAmount = 100, toPay = 110, timeStart = 10, timeEnd = 15, id = 1, active = true
+// get loan info from contract
+async function getLoanInfo(loanId) {
+  if (window.ethereum === undefined) {
+    alert("Wallet isn't connected!")
+    return
+  }
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const account = (await ethereum.request({ method: 'eth_requestAccounts' }))[0]
+  const signer = provider.getSigner()
+  const contract = useLoanPoolContract().connect(signer)
 
-const props = defineProps(["loan"])
-const loan = props.loan
-const borrower = loan.borrower, lender = loan.lender, nftAddress = loan.nft
-const loanActive = loan.loanActive, paidOff = loan.paidOff
-
-const id = loan.id.toBigInt(), nftId = loan.nftId.toBigInt(), timeStart = loan.timeStart.toBigInt(), timeEnd = loan.timeEnd.toBigInt(), requestedAmount = loan.requestedAmount.toBigInt(), toPay = loan.toPay.toBigInt()
-console.log(ethers.utils.formatUnits(toPay))
+  // TODO: fetch loan info from contract and update components
+}
 
 // get asset info from OpenSea
-async function getOpenSeaAsset(nftAddress, nftId) {
+async function getOpenSeaAsset(nftId, nftAddress) {
   const options = { method: 'GET', headers: { Accept: 'application/json', 'X-API-KEY': '' } }
-  const response = await fetch(`https://testnets-api.opensea.io/api/v1/asset/${nftAddress}/${nftId}/`, options)
+  const response = await fetch(`https://api.opensea.io/api/v1/asset/${nftAddress}/${nftId}/?include_orders=false`, options)
     .catch(err => console.error(err))
   return await response.json()
 }
 
-const asset = (await getOpenSeaAsset(nftAddress, nftId))
+const asset = (await getOpenSeaAsset(nftId, nftAddress))
 
-console.log(asset)
+// console.log(asset)
 </script>

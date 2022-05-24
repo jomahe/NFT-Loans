@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col ">
+  <div class="flex flex-row ">
     {{ $route.params.id }}
   </div>
 </template>
