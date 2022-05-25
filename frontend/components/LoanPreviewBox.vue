@@ -8,18 +8,20 @@
       <h2 class="card-title">
         <p>{{ asset.name }}</p>
       </h2>
-      <p>Start Date: {{timeStart}}</p>
-      <p>End Date: {{timeEnd}}</p>
-      <p>Loan Amount: {{requestedAmount}} ETH</p>
-      <p>Interest Rate: {{(toPay - requestedAmount) / (timeEnd - timeStart)}}</p>
-      <p>Borrower: {{borrower}}</p>
-      <p>Lender = {{lender}}</p>
-      <p>Loan Status: {{ active ? "active" : "inactive"}}</p>
+      <h1 class="font-bold">Loan #{{id}}</h1>
+      <p>Start Date: {{ timeStart }}</p>
+      <p>End Date: {{ timeEnd }}</p>
+      <p>Loan Amount: {{ ethers.utils.formatUnits(requestedAmount) }} ETH</p>
+      <p>Amount to Pay: {{ ethers.utils.formatUnits(toPay) }} ETH</p>
+      <p>Borrower: {{ borrower.slice(-6) }}</p>
+      <p>Lender = {{ lender.slice(-6) }}</p>
+      <p>Loan Status: {{ loanActive ? "active" : "pending" }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
+<<<<<<< HEAD
 const props = defineProps(["loanId"])
 const loanId = props.loanId
 const nftAddress = "0x000", nftId = 1
@@ -38,15 +40,27 @@ async function getLoanInfo(loanId) {
   // TODO: fetch loan info from contract and update components
 }
 
+=======
+import {ethers} from "ethers"
+
+const props = defineProps(["loan"])
+const loan = props.loan
+const borrower = loan.borrower, lender = loan.lender, nftAddress = loan.nft
+const loanActive = loan.loanActive, paidOff = loan.paidOff
+
+const id = loan.id.toBigInt(), nftId = loan.nftId.toBigInt(), timeStart = loan.timeStart.toBigInt(), timeEnd = loan.timeEnd.toBigInt(), requestedAmount = loan.requestedAmount.toBigInt(), toPay = loan.toPay.toBigInt()
+console.log(ethers.utils.formatUnits(toPay))
+
+>>>>>>> 1f72afb20ced3e0996c44b5954ed1c12e6f0326c
 // get asset info from OpenSea
-async function getOpenSeaAsset(nftId, nftAddress) {
+async function getOpenSeaAsset(nftAddress, nftId) {
   const options = { method: 'GET', headers: { Accept: 'application/json', 'X-API-KEY': '' } }
-  const response = await fetch(`https://api.opensea.io/api/v1/asset/${nftAddress}/${nftId}/?include_orders=false`, options)
+  const response = await fetch(`https://testnets-api.opensea.io/api/v1/asset/${nftAddress}/${nftId}/`, options)
     .catch(err => console.error(err))
   return await response.json()
 }
 
-const asset = (await getOpenSeaAsset(nftId, nftAddress))
+const asset = (await getOpenSeaAsset(nftAddress, nftId))
 
-// console.log(asset)
+console.log(asset)
 </script>
