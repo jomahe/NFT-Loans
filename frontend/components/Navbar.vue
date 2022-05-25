@@ -14,8 +14,7 @@
 
 <script setup>
 import { ethers } from "ethers"
-const account = useAccount()
-const currentBlockNumber = useCurrentBlockNumber()
+const account = ethereum.selectedAddress
 
 async function connectWallet() {
   if (window.ethereum !== undefined) {
@@ -26,10 +25,6 @@ async function connectWallet() {
     // setup event listeners
     ethereum.on("accountsChanged", (_chainId) => window.location.reload())
     ethereum.on("chainChanged", (_chainId) => window.location.reload())
-    provider.on("block", (blockNumber) => {
-      currentBlockNumber.value = blockNumber
-    })
-
   }
 }
 </script>
