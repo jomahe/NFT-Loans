@@ -29,7 +29,7 @@ async function proposeLoan(reqAmount, duration, toPay) {
 
   const tx = await contract.propose(
     "0x60e594700A50232b0af32572A7A4B648aB88Ff98",
-    4,
+    3,
     ethers.utils.parseUnits(reqAmount.toString(), 'ether'),
     ethers.utils.parseUnits(toPay.toString(), 'ether'),
     duration

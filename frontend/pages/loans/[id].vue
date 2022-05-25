@@ -42,7 +42,12 @@ async function accept() {
   const signer = provider.getSigner()
   const contract = useLoanPoolContract().connect(signer)
 
-  const tx = await contract.acceptLoan(id)
+
+
+  let loan = await contract.accessPending(id)
+  // console.log(loan.requestedAmount)
+
+  const tx = await contract.acceptLoan(id, { value: loan.requestedAmount })
 
   await tx.wait()
 
@@ -66,7 +71,8 @@ async function payOff() {
   const signer = provider.getSigner()
   const contract = useLoanPoolContract().connect(signer)
 
-  const tx = await contract.payOffInFull(id)
+  let loan = await contract.accessActive(id)
+  const tx = await contract.payInFull(id, { value: loan.toPay })
 
   await tx.wait()
 

@@ -24,7 +24,7 @@ async function getLoans() {
   const pendingLoans = []
   for (let i = 1; i <= cnt; i++) {
     const a = await contract.accessActive(i)
-    if (a.borrower !== "0x0000000000000000000000000000000000000000")
+    if (a.borrower !== "0x0000000000000000000000000000000000000000" && a.toPay != 0)
       activeLoans.push(a)
     const p = await contract.accessPending(i)
     if (p.borrower !== "0x0000000000000000000000000000000000000000")
