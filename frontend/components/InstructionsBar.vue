@@ -1,5 +1,5 @@
 <template>
-<div class="card bg-orange-300 rounded-none">
+<div class="card bg-orange-200 rounded-none">
   <div class="flex flex-row shadow-xl border-black font-['Courier_New']">
     <div class="flex-1 ml-72 mt-10 mb-10">
       <p class="font-bold">Borrowers: </p>
