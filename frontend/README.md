@@ -1,10 +1,10 @@
 # TODO
-- [ ] propose loan
+- [x] propose loan
 - [ ] cancel loan
 - [ ] accept loan
 - [ ] pay off loan
 - [ ] liquidate loan
-- [ ] persist wallet after refresh
+- [x] persist wallet after refresh
 
 ## Setup
 

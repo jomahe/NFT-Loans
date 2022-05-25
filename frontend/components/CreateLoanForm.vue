@@ -51,19 +51,16 @@ const osKey = useRuntimeConfig().osKey
 const toggle = ref(false)
 const assets = ref()
 
-
-
 async function selectNFT() {
   const options = { method: 'GET' };
-  const account = useAccount()
-  const owner = account.value
-  if (owner === undefined) {
+  const account = ethereum.selectedAddress
+  if (ethereum.selectedAddress === undefined) {
     alert("wallet isn't connected!")
     return
   }
 
   // get assets with opensea API
-  const response = await fetch(`https://testnets-api.opensea.io/api/v1/assets?owner=${account.value}&order_direction=desc&offset=0&limit=20`, options)
+  const response = await fetch(`https://testnets-api.opensea.io/api/v1/assets?owner=${account}&order_direction=desc&offset=0&limit=20`, options)
     .then((response) => response.json())
     .catch(err => console.error(err))
 
