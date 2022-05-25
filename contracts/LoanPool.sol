@@ -102,11 +102,12 @@ contract LoanPool {
 
      function propose(
         IERC721 _nft,
-        uint96 _nftId,
+        uint256 _nftId,
         uint96 _reqAmnt,
         uint96 _toPay,
         uint64 _duration
     ) public {
+        // can remove this requirement; people might let users
         require(_toPay > _reqAmnt, "Cannot request more than you pay!");
         require(
             _nft.getApproved(_nftId) == address(this),
@@ -218,6 +219,8 @@ contract LoanPool {
             paidOff:         false,
             loanActive:      true
         });
+
+        delete pendingLoans[_loanId];
 
         emit AcceptedLoan(
             accepting.borrower,

@@ -2,9 +2,6 @@
   <div v-if="connected" class="grid grid-cols-3 auto-rows-auto gap-10 mx-40 my-6">
     <LoanPreviewBox v-for="loan in loans" :loan="loan" />
   </div>
-  <div v-else>
-    <p class="text-center m-6">Connect wallet to view active loans</p>
-  </div>
 </template>
 
 <script setup>
@@ -27,7 +24,7 @@ async function getLoans() {
   const pendingLoans = []
   for (let i = 1; i <= cnt; i++) {
     const a = await contract.accessActive(i)
-    if (a.borrower !== "0x0000000000000000000000000000000000000000")
+    if (a.borrower !== "0x0000000000000000000000000000000000000000" && a.toPay != 0)
       activeLoans.push(a)
     const p = await contract.accessPending(i)
     if (p.borrower !== "0x0000000000000000000000000000000000000000")

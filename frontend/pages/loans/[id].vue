@@ -2,10 +2,10 @@
   <div class="grid grid-rows-1 grid-cols-2 p-6">
     <LoanPreviewBox class="mx-auto" :loan="loan"></LoanPreviewBox>
     <div class="flex flex-col justify-around gap-4 px-20">
-      <button class="btn">Accept</button>
-      <button class="btn">Cancel</button>
-      <button class="btn">Payoff</button>
-      <button class="btn">Liquidate</button>
+      <button class="btn" @click="accept()">Accept</button>
+      <button class="btn" @click="cancel()">Cancel</button>
+      <button class="btn" @click="payOff()">Payoff</button>
+      <button class="btn" @click="liq()">Liquidate</button>
     </div>
   </div>
 </template>
@@ -37,6 +37,59 @@ async function getLoan(id) {
   return loan
 }
 
+async function accept() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = provider.getSigner()
+  const contract = useLoanPoolContract().connect(signer)
+
+
+
+  let loan = await contract.accessPending(id)
+  // console.log(loan.requestedAmount)
+
+  const tx = await contract.acceptLoan(id, { value: loan.requestedAmount })
+
+  await tx.wait()
+
+  console.log(tx)
+}
+
+async function cancel() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = provider.getSigner()
+  const contract = useLoanPoolContract().connect(signer)
+
+  const tx = await contract.retract(id)
+
+  await tx.wait()
+
+  console.log(tx)
+}
+
+async function payOff() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = provider.getSigner()
+  const contract = useLoanPoolContract().connect(signer)
+
+  let loan = await contract.accessActive(id)
+  const tx = await contract.payInFull(id, { value: loan.toPay })
+
+  await tx.wait()
+
+  console.log(tx)
+}
+
+async function liq() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = provider.getSigner()
+  const contract = useLoanPoolContract().connect(signer)
+
+  const tx = await contract.liquidate(id)
+
+  await tx.wait()
+
+  console.log(tx)
+}
 const loan = await getLoan(id)
 // console.log(loan)
 

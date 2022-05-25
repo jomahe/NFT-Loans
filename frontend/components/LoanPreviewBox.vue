@@ -9,12 +9,12 @@
         <p>{{ asset.name }}</p>
       </h2>
       <h1 class="font-bold">Loan #{{ id }}</h1>
-      <p>Start Date: {{ timeStart }}</p>
-      <p>End Date: {{ timeEnd }}</p>
+      <p>Start Date: {{ timeStart == 0 ? "N/A" : timeStart }}</p>
+      <p>Duration: {{ timeEnd.toString() + " hours"  }}</p>
       <p>Loan Amount: {{ ethers.utils.formatUnits(requestedAmount) }} ETH</p>
       <p>Amount to Pay: {{ ethers.utils.formatUnits(toPay) }} ETH</p>
       <p>Borrower: {{ borrower.slice(-6) }}</p>
-      <p>Lender = {{ lender.slice(-6) }}</p>
+      <p>Lender: {{ lender.slice(-6) == 0 ? "None" : lender.slice(-6) }}</p>
       <p>Loan Status: {{ loanActive ? "active" : "pending" }}</p>
     </div>
   </NuxtLink>
