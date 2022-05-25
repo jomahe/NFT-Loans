@@ -1,5 +1,5 @@
 <template>
-  <div class="card bg-base-100 shadow-xl rounded-xl border-black" onclick="location.href='https://mcdonalds.com'">
+  <NuxtLink class="card bg-base-100 shadow-xl rounded-xl border-black" :to="`/loans/${id}`">
     <figure class="justify-self-center">
       <img :src="asset.image_url" :alt="asset.name" class="rounded-xl max-h-40 m-auto" />
     </figure>
@@ -8,7 +8,7 @@
       <h2 class="card-title">
         <p>{{ asset.name }}</p>
       </h2>
-      <h1 class="font-bold">Loan #{{id}}</h1>
+      <h1 class="font-bold">Loan #{{ id }}</h1>
       <p>Start Date: {{ timeStart }}</p>
       <p>End Date: {{ timeEnd }}</p>
       <p>Loan Amount: {{ ethers.utils.formatUnits(requestedAmount) }} ETH</p>
@@ -17,11 +17,11 @@
       <p>Lender = {{ lender.slice(-6) }}</p>
       <p>Loan Status: {{ loanActive ? "active" : "pending" }}</p>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup>
-import {ethers} from "ethers"
+import { ethers } from "ethers"
 
 const props = defineProps(["loan"])
 const loan = props.loan
@@ -29,7 +29,6 @@ const borrower = loan.borrower, lender = loan.lender, nftAddress = loan.nft
 const loanActive = loan.loanActive, paidOff = loan.paidOff
 
 const id = loan.id.toBigInt(), nftId = loan.nftId.toBigInt(), timeStart = loan.timeStart.toBigInt(), timeEnd = loan.timeEnd.toBigInt(), requestedAmount = loan.requestedAmount.toBigInt(), toPay = loan.toPay.toBigInt()
-console.log(ethers.utils.formatUnits(toPay))
 
 // get asset info from OpenSea
 async function getOpenSeaAsset(nftAddress, nftId) {
@@ -41,5 +40,5 @@ async function getOpenSeaAsset(nftAddress, nftId) {
 
 const asset = (await getOpenSeaAsset(nftAddress, nftId))
 
-console.log(asset)
+// console.log(asset)
 </script>
