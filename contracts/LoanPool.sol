@@ -102,7 +102,7 @@ contract LoanPool {
 
      function propose(
         IERC721 _nft,
-        uint96 _nftId,
+        uint256 _nftId,
         uint96 _reqAmnt,
         uint96 _toPay,
         uint64 _duration
