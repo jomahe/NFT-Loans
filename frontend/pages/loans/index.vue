@@ -1,4 +1,6 @@
 <template>
+  <div class="flex-1">
+    <InstructionsBar />
   <div class="flex flex-row space-x-10 p-10">
     <div class="flex-1">
       <DisplayNft class="mx-auto" :nftUrl="nftUrl" :isImg="isImg" />
@@ -9,6 +11,7 @@
     <div class="flex-1">
       <LoanInstructions />
     </div>
+  </div>
   </div>
 </template>
 
