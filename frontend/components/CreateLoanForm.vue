@@ -25,7 +25,7 @@
       </div>
       <div class="flex items-center">
         <span class="flex-1 inline-block">Amount to Repay (ETH)</span>
-        <input v-model="loanRate" type="int" placeholder=0 class="input flex-1 mx-4">
+        <input v-model="loanToPay" type="int" placeholder=0 class="input flex-1 mx-4">
         <!-- <span class="flex-1 inline-block">%</span> -->
       </div>
       <button @click="proposeLoan" class="btn">Create Loan!</button>
@@ -41,7 +41,7 @@ const emit = defineEmits(['nftSelected'])
 
 const loanAmt = ref(null)
 const loanDur = ref(null)
-const loanRate = ref(null)
+const loanToPay = ref(null)
 const osKey = useRuntimeConfig().osKey
 const toggle = ref(false)
 const assets = ref(null)
@@ -89,23 +89,24 @@ async function approveNFT() {
   console.log(tx)
 }
 
-async function proposeLoan(reqAmount, duration, toPay) {
+async function proposeLoan() {
   if (window.ethereum === undefined) {
     alert("Wallet isn't connected!")
     return
   }
 
   const provider = new ethers.providers.Web3Provider(window.ethereum)
-  const account = (await ethereum.request({ method: 'eth_requestAccounts' }))[0]
   const signer = provider.getSigner()
-  const contract = new ethers.Contract(loanPoolAddr.toString(), loanPoolABI, signer)
+  const contract = new ethers.Contract(loanPoolAddr, loanPoolABI, signer)
+
+  // console.log(loanAmt.value, ethers.utils.parseUnits(loanAmt.value.toString(), 'ether'))
 
   const tx = await contract.propose(
-    "0x60e594700A50232b0af32572A7A4B648aB88Ff98",
-    3,
-    ethers.utils.parseUnits(reqAmount.toString(), 'ether'),
-    ethers.utils.parseUnits(toPay.toString(), 'ether'),
-    duration
+    selectedNFT.value.asset_contract.address,
+    selectedNFT.value.token_id,
+    ethers.utils.parseUnits(loanAmt.value.toString(), 'ether'),
+    ethers.utils.parseUnits(loanToPay.value.toString(), 'ether'),
+    loanDur.value
   )
 
   await tx.wait()
