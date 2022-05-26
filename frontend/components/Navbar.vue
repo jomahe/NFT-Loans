@@ -1,7 +1,7 @@
 <template>
   <div class="navbar bg-base-100 border-2 font-['Courier_New']">
     <div class="flex-1">
-      <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">NFT Loans</NuxtLink>
+      <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">Collateral</NuxtLink>
     </div>
     <div class="flex-none space-x-2">
       <NuxtLink to="/loans" class="btn">Create Loans</NuxtLink>

@@ -10,7 +10,7 @@
       </h2>
       <h1 class="font-bold">Loan #{{ id }}</h1>
       <p>Start Date: {{ timeStart == 0 ? "N/A" : timeStart }}</p>
-      <p>Duration: {{ timeEnd.toString() + " hours"  }}</p>
+      <p>Duration: {{ Number(timeEnd) / 3600 + " hours"  }}</p>
       <p>Loan Amount: {{ ethers.utils.formatUnits(requestedAmount) }} ETH</p>
       <p>Amount to Pay: {{ ethers.utils.formatUnits(toPay) }} ETH</p>
       <p>Borrower: {{ borrower.slice(-6) }}</p>
@@ -40,5 +40,5 @@ async function getOpenSeaAsset(nftAddress, nftId) {
 
 const asset = (await getOpenSeaAsset(nftAddress, nftId))
 
-// console.log(asset)
+
 </script>
