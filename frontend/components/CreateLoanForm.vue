@@ -36,6 +36,7 @@
 
 <script setup>
 import { ethers } from "ethers"
+import { loanPoolAddr, loanPoolABI } from "../composables/states";
 
 const emit = defineEmits(['nftSelected'])
 

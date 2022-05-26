@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.12;
 
 /**
  * Loan Pool Contract will hold the collateral of borrowers and create the
@@ -7,9 +7,11 @@ pragma solidity ^0.8.10;
  **/
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
 
-contract LoanPool {
+contract LoanPool is ChainlinkClient {
 
+    using Chainlink for Chainlink.Request;
     // Events for emitting when certain things happen
     event PostedLoan(address proposer, uint id);
     event CeaseLoan(address retractor, uint id);
@@ -20,14 +22,19 @@ contract LoanPool {
 
     // State variables, mappings
     address private immutable owner;
-    uint96  public loanId;
-    uint256 public immutable feePercent;
+    uint64  public loanId;
+    uint32  public immutable feePercent;
+    bytes32 private jobId = "6a92925dbb0e48e9b375b1deac4751c0";
+    uint256 private fee = 0.1 * (10 ** 18);
+    uint96 public currFloor;
 
     mapping(uint => Loan) pendingLoans;
     mapping(uint => Loan) activeLoans;
 
     struct Loan {
         IERC721 nft;
+        bool paidOff;
+        bool loanActive;
         address borrower;
         uint96 requestedAmount;
         address lender;
@@ -35,9 +42,8 @@ contract LoanPool {
         uint64 timeStart;
         uint64 timeEnd;
         uint96 id;
-        uint256 nftId;
-        bool paidOff;
-        bool loanActive;
+        uint224 nftId;
+        uint96 priceAtProposal;
     }
 
     modifier onlyOwner() {
@@ -45,9 +51,27 @@ contract LoanPool {
         _;
     }
 
-    constructor (uint _feePercent) {
+    constructor (uint32 _feePercent) {
         owner = msg.sender;
         feePercent = _feePercent;
+        setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);  // Rinkeby Link address
+        setChainlinkOracle(0xF59646024204a733E1E4f66B303c9eF4f68324cC);  // Rinkeby test node oracle address
+    }
+
+    /***************** CHAINLINK FUNCTIONS  ******************/
+
+    function requestFloorPrice(string calldata _slug) public payable {
+        Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+        string memory url = string.concat("https://testnets-api.opensea.io/api/v1/collection/", _slug);
+        req.add('get', url);
+        req.add("path", 'collection,stats,floor_price');
+        req.addInt("times", 10 ** 18);
+
+        sendChainlinkRequest(req, fee);
+    }
+
+    function fulfill(bytes32 _requestId, uint96 _price) public recordChainlinkFulfillment(_requestId) {
+        currFloor = _price;
     }
 
     function _fee() public view returns (uint) {
@@ -102,10 +126,11 @@ contract LoanPool {
 
      function propose(
         IERC721 _nft,
-        uint256 _nftId,
+        uint224 _nftId,
         uint96 _reqAmnt,
         uint96 _toPay,
-        uint64 _duration
+        uint64 _duration,
+        string calldata _slug
     ) public {
         // can remove this requirement; people might let users
         require(_toPay > _reqAmnt, "Cannot request more than you pay!");
@@ -113,6 +138,8 @@ contract LoanPool {
             _nft.getApproved(_nftId) == address(this),
             "Transfer not approved!"
         );
+        requestFloorPrice(_slug);
+        require(_reqAmnt < (currFloor >> 1));  // Call to Chainlink to verify that the requested amount is less than half the floor price
         _nft.transferFrom(msg.sender, address(this), _nftId);
         Loan memory newLoan = Loan({
             borrower:        msg.sender,
@@ -125,7 +152,8 @@ contract LoanPool {
             timeEnd:         _duration * (1 days),
             id:              ++loanId,
             paidOff:         false,
-            loanActive:      false
+            loanActive:      false,
+            priceAtProposal: currFloor
         });
 
         pendingLoans[loanId] = newLoan;
@@ -217,7 +245,8 @@ contract LoanPool {
             timeEnd:         accepting.timeEnd + uint64(block.timestamp),
             id:              _loanId,
             paidOff:         false,
-            loanActive:      true
+            loanActive:      true,
+            priceAtProposal: accepting.priceAtProposal
         });
 
         delete pendingLoans[_loanId];
@@ -231,10 +260,14 @@ contract LoanPool {
     }
 
     // Lender should be able to liquidate defaulted loans
-    function liquidate(uint96 _id) external validActiveLoan(_id) {
+    function liquidate(uint96 _id, string calldata _slug) external validActiveLoan(_id) {
         Loan memory loan = activeLoans[_id];
+
+        requestFloorPrice(_slug);  // Call to Chainlink oracle to see if floor price has fallen enough
+
         require(
-            block.timestamp > loan.timeEnd && loan.loanActive,
+            block.timestamp > loan.timeEnd && loan.loanActive ||
+            (currFloor << 1) < loan.priceAtProposal,
             "Loan period still active!"
         );
 

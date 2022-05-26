@@ -9,8 +9,9 @@
         <p>{{ asset.name }}</p>
       </h2>
       <h1 class="font-bold">Loan #{{ id }}</h1>
-      <p>Start Date: {{ timeStart == 0 ? "N/A" : timeStart }}</p>
-      <p>Duration: {{ Number(timeEnd) / 3600 + " hours"  }}</p>
+      <!-- <p>Start Date: {{ timeStart == 0 ? "N/A" : timeStart }}</p> -->
+      <p>{{ loanActive ? "Time Remaining: " + Number(timeEnd - timeStart) / 3600 + " hours"
+        : "Duration: " + Number(timeEnd - timeStart) / 3600 + " hours"  }}</p>
       <p>Loan Amount: {{ ethers.utils.formatUnits(requestedAmount) }} ETH</p>
       <p>Amount to Pay: {{ ethers.utils.formatUnits(toPay) }} ETH</p>
       <p>Borrower: {{ borrower.slice(-6) }}</p>
@@ -29,7 +30,6 @@ const borrower = loan.borrower, lender = loan.lender, nftAddress = loan.nft
 const loanActive = loan.loanActive, paidOff = loan.paidOff
 
 const id = loan.id.toBigInt(), nftId = loan.nftId.toBigInt(), timeStart = loan.timeStart.toBigInt(), timeEnd = loan.timeEnd.toBigInt(), requestedAmount = loan.requestedAmount.toBigInt(), toPay = loan.toPay.toBigInt()
-
 // get asset info from OpenSea
 async function getOpenSeaAsset(nftAddress, nftId) {
   const options = { method: 'GET', headers: { Accept: 'application/json', 'X-API-KEY': '' } }
