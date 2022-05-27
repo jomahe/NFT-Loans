@@ -1,6 +1,10 @@
 <template>
-  <div v-if="connected" class="grid grid-cols-3 auto-rows-auto gap-10 mx-40 my-6">
-    <LoanPreviewBox v-for="loan in loans" :loan="loan" />
+  <div class="flex-1 min-h-screen">
+    <InstructionsBar />
+    <div v-if="connected" class="grid grid-cols-3 auto-rows-auto gap-10 mx-40 my-6">
+      <LoanPreviewBox v-for="loan in loans" :loan="loan" />
+      <!-- <SampleLoanBox v-for="loan in sampleLoans" :loan="loan" /> -->
+    </div>
   </div>
 </template>
 
@@ -22,7 +26,7 @@ async function getLoans() {
   const cnt = await contract.loanId()
   const activeLoans = []
   const pendingLoans = []
-  for (let i = 1; i <= cnt; i++) {
+  for (let i = cnt; i >= 1; i--) {
     const a = await contract.accessActive(i)
     if (a.borrower !== "0x0000000000000000000000000000000000000000" && a.toPay != 0)
       activeLoans.push(a)
@@ -37,7 +41,7 @@ async function getLoans() {
 let loans = []
 if (ethereum.selectedAddress !== null) {
   loans = await getLoans()
-
 }
 // console.log(loans)
+
 </script>

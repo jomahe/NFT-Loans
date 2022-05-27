@@ -1,7 +1,7 @@
 <template>
-  <div class="grid grid-rows-1 grid-cols-2 p-6">
-    <LoanPreviewBox class="mx-auto" :loan="loan"></LoanPreviewBox>
-    <div class="flex flex-col justify-around gap-4 px-20">
+  <div class="grid grid-rows-1 grid-cols-2 p-6 h-screen">
+    <LoanPreviewBox class="mb-auto mx-auto" :loan="loan"></LoanPreviewBox>
+    <div class="flex flex-col justify-around gap-4 h-80 px-20 mt-20">
       <button class="btn" @click="accept()">Accept</button>
       <button class="btn" @click="cancel()">Cancel</button>
       <button class="btn" @click="payOff()">Payoff</button>

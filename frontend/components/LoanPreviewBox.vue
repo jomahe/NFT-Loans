@@ -1,9 +1,9 @@
 <template>
-  <NuxtLink class="card bg-base-100 shadow-xl rounded-xl border-black" :to="`/loans/${id}`">
+  <NuxtLink class="card bg-white/30 shadow-xl rounded-box border-black p-8" :to="`/loans/${id}`">
     <figure class="justify-self-center">
       <img :src="asset.image_url" :alt="asset.name" class="rounded-xl max-h-40 m-auto" />
     </figure>
-    <div class="card-body items-center text-center p-4">
+    <div class="card-body items-center text-center p-4 font-['Courier_New']">
       <a class="card bg-base-100 shadow-xl bordered-none"></a>
       <h2 class="card-title">
         <p>{{ asset.name }}</p>
@@ -38,7 +38,8 @@ async function getOpenSeaAsset(nftAddress, nftId) {
   return await response.json()
 }
 
-const asset = (await getOpenSeaAsset(nftAddress, nftId))
+let asset = (await getOpenSeaAsset(nftAddress, nftId))
 
+console.log(asset)
 
 </script>

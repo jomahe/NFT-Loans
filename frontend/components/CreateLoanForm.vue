@@ -15,17 +15,17 @@
       <button @click="approveNFT" class="btn">Approve NFT</button>
 
       <div class="flex items-center">
-        <span class="flex-1 inline-block">Requested <br> Amount (ETH)</span>
-        <input v-model="loanAmt" type="int" placeholder=0 class="input flex-1">
+        <span class="flex-1 inline-block font-bold">Requested <br> Amount (ETH)</span>
+        <input v-model="loanAmt" type="int" placeholder=0 class="input flex-1 bg-white/30">
       </div>
       <div class="flex items-center">
-        <span class="flex-1 inline-block">Loan Duration (days)</span>
-        <input v-model="loanDur" type="int" placeholder=0 class="input flex-1 mx-4">
+        <span class="flex-1 inline-block font-bold">Loan Duration (days)</span>
+        <input v-model="loanDur" type="int" placeholder=0 class="input flex-1 bg-white/30">
         <!-- <span class="flex-1 inline-block align-text-bottom">days</span> -->
       </div>
       <div class="flex items-center">
-        <span class="flex-1 inline-block">Amount to Repay (ETH)</span>
-        <input v-model="loanToPay" type="int" placeholder=0 class="input flex-1 mx-4">
+        <span class="flex-1 inline-block font-bold">Amount to Repay (ETH)</span>
+        <input v-model="loanToPay" type="int" placeholder=0 class="input flex-1 bg-white/30">
         <!-- <span class="flex-1 inline-block">%</span> -->
       </div>
       <button @click="proposeLoan" class="btn">Create Loan!</button>
